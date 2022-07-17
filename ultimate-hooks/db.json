@@ -7,6 +7,14 @@
     {
       "content": "the best featrure ever <3",
       "id": 2
+    },
+    {
+      "content": "now this works",
+      "id": 3
+    },
+    {
+      "content": "asd",
+      "id": 4
     }
   ],
   "persons": [
@@ -19,6 +27,16 @@
       "name": "kaltsoon",
       "number": "045-2323456",
       "id": 2
+    },
+    {
+      "name": "working",
+      "number": "5641235",
+      "id": 3
+    },
+    {
+      "name": "worksnow",
+      "number": "123456",
+      "id": 4
     }
   ]
 }
