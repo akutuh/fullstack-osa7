@@ -8,12 +8,16 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { useDispatch } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService
@@ -43,10 +47,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('wrong credentials'))
     }
   }
 
@@ -61,18 +62,15 @@ const App = () => {
       let returnedBloguserid = returnedBlog.user
       returnedBlog.user = { username: user.username, id: returnedBloguserid }
       setBlogs(blogs.concat(returnedBlog))
-      setErrorMessage(
-        `a new blog ${blogObject.title} by ${blogObject.author} added`
+      dispatch(
+        setNotification(
+          `a new blog ${blogObject.title} by ${blogObject.author} added`,
+          5
+        )
       )
       blogFormRef.current.toggleVisibility()
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
     } catch (exception) {
-      setErrorMessage('creation failed')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('creation failed'))
     }
   }
 
@@ -84,10 +82,7 @@ const App = () => {
       obj.likes = returnedBlog.likes
       setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
     } catch (exception) {
-      setErrorMessage('creation failed (like)')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('creation failed (like)'))
     }
   }
 
@@ -101,18 +96,14 @@ const App = () => {
         await blogService.remove(blogObject)
         let blogsCopy = [...blogs]
         setBlogs(blogsCopy.filter((b) => b.id !== blogObject.id))
-        setErrorMessage(
-          `blog ${blogObject.title} by ${blogObject.author} was removed`
+        dispatch(
+          setNotification(
+            `blog ${blogObject.title} by ${blogObject.author} was removed`
+          )
         )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
       }
     } catch (exception) {
-      setErrorMessage(exception.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification(exception.response.data.error))
     }
   }
 
@@ -123,7 +114,7 @@ const App = () => {
       {user === null ? (
         <div>
           <h1>log in to application</h1>
-          <Notification message={errorMessage} />
+          <Notification />
           <Togglable buttonLabel="login">
             <LoginForm
               username={username}
@@ -137,7 +128,7 @@ const App = () => {
       ) : (
         <div>
           <h2>blogs</h2>
-          <Notification message={errorMessage} />
+          <Notification />
           <p>
             {user.name} logged in{' '}
             <button onClick={handleLogout}> logout</button>

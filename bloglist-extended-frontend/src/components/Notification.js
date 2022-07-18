@@ -1,10 +1,20 @@
-const Notification = ({ message }) => {
-  if (message === null) {
+import { useSelector } from 'react-redux'
+
+const Notification = () => {
+  const notification = useSelector(({ notifications }) => {
+    if (notifications === null) {
+      return null
+    } else {
+      return notifications
+    }
+  })
+
+  if (notification === null) {
     return null
   } else if (
-    message.includes('wrong credentials') ||
-    message.includes('creation failed') ||
-    message.includes('allowed')
+    notification.includes('wrong credentials') ||
+    notification.includes('creation failed') ||
+    notification.includes('allowed')
   ) {
     const errorStyle = {
       color: 'red',
@@ -18,7 +28,7 @@ const Notification = ({ message }) => {
 
     return (
       <div className="error" style={errorStyle}>
-        {message}
+        {notification}
       </div>
     )
   } else {
@@ -34,7 +44,7 @@ const Notification = ({ message }) => {
 
     return (
       <div className="error" style={errorStyle}>
-        {message}
+        {notification}
       </div>
     )
   }
