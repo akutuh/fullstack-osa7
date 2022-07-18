@@ -10,7 +10,12 @@ import loginService from './services/login'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import {
+  initializeBlogs,
+  createBlog,
+  addLike,
+  removeBlog,
+} from './reducers/blogReducer'
 
 const App = () => {
   //const [blogs, setBlogs] = useState([])
@@ -60,8 +65,9 @@ const App = () => {
   }
 
   const addBlog = async (blogObject) => {
+    console.log('user', user)
     try {
-      dispatch(createBlog(blogObject))
+      dispatch(createBlog(blogObject, user))
       dispatch(
         setNotification(
           `a new blog ${blogObject.title} by ${blogObject.author} added`,
@@ -76,11 +82,7 @@ const App = () => {
 
   const likeBlog = async (blogObject) => {
     try {
-      const returnedBlog = await blogService.like(blogObject)
-      let blogsCopy = [...blogs]
-      let obj = blogsCopy.find((b) => b.id === returnedBlog.id)
-      obj.likes = returnedBlog.likes
-      //setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
+      dispatch(addLike(blogObject))
     } catch (exception) {
       dispatch(setNotification('creation failed (like)'))
     }
@@ -93,9 +95,10 @@ const App = () => {
           `Remove blog ${blogObject.title} by ${blogObject.author}?`
         )
       ) {
-        await blogService.remove(blogObject)
+        //await blogService.remove(blogObject)
         //let blogsCopy = [...blogs]
         //setBlogs(blogsCopy.filter((b) => b.id !== blogObject.id))
+        dispatch(removeBlog(blogObject))
         dispatch(
           setNotification(
             `blog ${blogObject.title} by ${blogObject.author} was removed`
