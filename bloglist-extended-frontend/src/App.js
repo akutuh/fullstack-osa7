@@ -8,11 +8,16 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
+  const blogs = useSelector((state) => {
+    return state.blogs
+  })
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -20,10 +25,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -58,10 +61,7 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-      const returnedBlog = await blogService.create(blogObject)
-      let returnedBloguserid = returnedBlog.user
-      returnedBlog.user = { username: user.username, id: returnedBloguserid }
-      setBlogs(blogs.concat(returnedBlog))
+      dispatch(createBlog(blogObject))
       dispatch(
         setNotification(
           `a new blog ${blogObject.title} by ${blogObject.author} added`,
@@ -80,7 +80,7 @@ const App = () => {
       let blogsCopy = [...blogs]
       let obj = blogsCopy.find((b) => b.id === returnedBlog.id)
       obj.likes = returnedBlog.likes
-      setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
+      //setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
     } catch (exception) {
       dispatch(setNotification('creation failed (like)'))
     }
@@ -94,8 +94,8 @@ const App = () => {
         )
       ) {
         await blogService.remove(blogObject)
-        let blogsCopy = [...blogs]
-        setBlogs(blogsCopy.filter((b) => b.id !== blogObject.id))
+        //let blogsCopy = [...blogs]
+        //setBlogs(blogsCopy.filter((b) => b.id !== blogObject.id))
         dispatch(
           setNotification(
             `blog ${blogObject.title} by ${blogObject.author} was removed`
