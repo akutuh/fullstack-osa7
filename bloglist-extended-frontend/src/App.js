@@ -16,16 +16,21 @@ import {
   addLike,
   removeBlog,
 } from './reducers/blogReducer'
+import { getUserFromJSON, newUser } from './reducers/userReducer'
 
 const App = () => {
   //const [blogs, setBlogs] = useState([])
   const blogs = useSelector((state) => {
     return state.blogs
   })
+  const user = useSelector((state) => {
+    return state.users
+  })
+  //const [user, setUser] = useState(null)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+
 
   const dispatch = useDispatch()
 
@@ -35,11 +40,12 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
+    dispatch(getUserFromJSON(loggedUserJSON))
+    // if (loggedUserJSON) {
+    //   const user = JSON.parse(loggedUserJSON)
+    //   setUser(user)
+    //   blogService.setToken(user.token)
+    // }
   }, [])
 
   const handleLogin = async (event) => {
@@ -51,7 +57,7 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(newUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -95,9 +101,6 @@ const App = () => {
           `Remove blog ${blogObject.title} by ${blogObject.author}?`
         )
       ) {
-        //await blogService.remove(blogObject)
-        //let blogsCopy = [...blogs]
-        //setBlogs(blogsCopy.filter((b) => b.id !== blogObject.id))
         dispatch(removeBlog(blogObject))
         dispatch(
           setNotification(
