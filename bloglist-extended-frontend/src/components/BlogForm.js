@@ -23,7 +23,7 @@ const BlogForm = ({ createBlog }) => {
     createBlog({
       title: title,
       author: author,
-      url: url
+      url: url,
     })
 
     setTitle('')
@@ -36,7 +36,7 @@ const BlogForm = ({ createBlog }) => {
       <h2>create a new blog</h2>
       <form onSubmit={addBlog}>
         <div>
-        title:
+          title:
           <input
             type="text"
             value={title}
@@ -54,7 +54,7 @@ const BlogForm = ({ createBlog }) => {
             name="Author"
             onChange={handleAuthorChange}
             aria-label="Author"
-            id='author'
+            id="author"
           />
         </div>
         <div>
@@ -68,7 +68,9 @@ const BlogForm = ({ createBlog }) => {
             id="url"
           />
         </div>
-        <button id="create-button" type="submit">create</button>
+        <button id="create-button" type="submit">
+          create
+        </button>
       </form>
     </div>
   )

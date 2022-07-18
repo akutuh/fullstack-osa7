@@ -16,9 +16,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((a, b) => b.likes - a.likes ))
-    )
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
   }, [])
 
   useEffect(() => {
@@ -34,11 +34,10 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username,
+        password,
       })
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -56,14 +55,15 @@ const App = () => {
     window.location.reload(false)
   }
 
-
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       let returnedBloguserid = returnedBlog.user
       returnedBlog.user = { username: user.username, id: returnedBloguserid }
       setBlogs(blogs.concat(returnedBlog))
-      setErrorMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+      setErrorMessage(
+        `a new blog ${blogObject.title} by ${blogObject.author} added`
+      )
       blogFormRef.current.toggleVisibility()
       setTimeout(() => {
         setErrorMessage(null)
@@ -79,8 +79,8 @@ const App = () => {
   const likeBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.like(blogObject)
-      let  blogsCopy = [...blogs]
-      let obj = blogsCopy.find(b => b.id === returnedBlog.id)
+      let blogsCopy = [...blogs]
+      let obj = blogsCopy.find((b) => b.id === returnedBlog.id)
       obj.likes = returnedBlog.likes
       setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
     } catch (exception) {
@@ -93,11 +93,17 @@ const App = () => {
 
   const deleteBlog = async (blogObject) => {
     try {
-      if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}?`)) {
+      if (
+        window.confirm(
+          `Remove blog ${blogObject.title} by ${blogObject.author}?`
+        )
+      ) {
         await blogService.remove(blogObject)
-        let  blogsCopy = [...blogs]
-        setBlogs(blogsCopy.filter(b => b.id !== blogObject.id))
-        setErrorMessage(`blog ${blogObject.title} by ${blogObject.author} was removed`)
+        let blogsCopy = [...blogs]
+        setBlogs(blogsCopy.filter((b) => b.id !== blogObject.id))
+        setErrorMessage(
+          `blog ${blogObject.title} by ${blogObject.author} was removed`
+        )
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -114,11 +120,11 @@ const App = () => {
 
   return (
     <div>
-      {user === null ?
+      {user === null ? (
         <div>
           <h1>log in to application</h1>
-          <Notification message={errorMessage}/>
-          <Togglable buttonLabel='login'>
+          <Notification message={errorMessage} />
+          <Togglable buttonLabel="login">
             <LoginForm
               username={username}
               password={password}
@@ -127,19 +133,29 @@ const App = () => {
               handleLogin={handleLogin}
             />
           </Togglable>
-        </div> :
+        </div>
+      ) : (
         <div>
           <h2>blogs</h2>
-          <Notification message={errorMessage}/>
-          <p>{user.name} logged in <button onClick={handleLogout}> logout</button></p>
-          <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-            <BlogForm createBlog={addBlog}/>
+          <Notification message={errorMessage} />
+          <p>
+            {user.name} logged in{' '}
+            <button onClick={handleLogout}> logout</button>
+          </p>
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+            <BlogForm createBlog={addBlog} />
           </Togglable>
-          {blogs.map(blog =>
-            <Blog key={blog.id} user={user} blog={blog} createBlog={likeBlog} removeBlog={deleteBlog}  />
-          )}
+          {blogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              user={user}
+              blog={blog}
+              createBlog={likeBlog}
+              removeBlog={deleteBlog}
+            />
+          ))}
         </div>
-      }
+      )}
     </div>
   )
 }

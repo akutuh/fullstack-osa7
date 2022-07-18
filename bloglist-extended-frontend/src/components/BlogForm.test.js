@@ -8,7 +8,7 @@ test('BlogForm calls callback function with right data given with props when blo
   const user = userEvent.setup()
   const createBlog = jest.fn()
 
-  render(<BlogForm createBlog={createBlog}  />)
+  render(<BlogForm createBlog={createBlog} />)
 
   const titleInput = screen.getByRole('textbox', { name: 'Title' })
   const authorInput = screen.getByRole('textbox', { name: 'Author' })

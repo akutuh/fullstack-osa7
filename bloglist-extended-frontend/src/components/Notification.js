@@ -1,7 +1,11 @@
 const Notification = ({ message }) => {
   if (message === null) {
     return null
-  } else if (message.includes('wrong credentials') || message.includes('creation failed') || message.includes('allowed')) {
+  } else if (
+    message.includes('wrong credentials') ||
+    message.includes('creation failed') ||
+    message.includes('allowed')
+  ) {
     const errorStyle = {
       color: 'red',
       background: 'lightgrey',
@@ -9,7 +13,7 @@ const Notification = ({ message }) => {
       borderStyle: 'solid',
       borderRadius: 5,
       padding: 10,
-      marginBottom: 10
+      marginBottom: 10,
     }
 
     return (
@@ -25,7 +29,7 @@ const Notification = ({ message }) => {
       borderStyle: 'solid',
       borderRadius: 5,
       padding: 10,
-      marginBottom: 10
+      marginBottom: 10,
     }
 
     return (
@@ -37,4 +41,3 @@ const Notification = ({ message }) => {
 }
 
 export default Notification
-
