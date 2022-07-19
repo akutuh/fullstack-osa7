@@ -1,22 +1,27 @@
 import { commentsForBlog } from '../reducers/commentReducer'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import SpesificBlogComments from './SpesificBlogComments'
 
-const SpesificBlog = ({ matchedBlog, createBlog }) => {
+const SpesificBlog = ({ matchedBlog, createBlog, createComment }) => {
+  const [comment, setComment] = useState('')
   //console.log(matchedBlog)
-  if (!matchedBlog) {
-    return null
-  }
-
   const dispatch = useDispatch()
 
   useEffect(() => {
+    if (!matchedBlog) {
+      return
+    }
     dispatch(commentsForBlog(matchedBlog.id))
-  }, [dispatch])
+  }, [dispatch, matchedBlog])
 
   const comments = useSelector((state) => {
     return state.comments
   })
+  if (!matchedBlog) {
+    return null
+  }
+
   console.log(comments)
   const likeBlog = (event) => {
     event.preventDefault()
@@ -29,6 +34,21 @@ const SpesificBlog = ({ matchedBlog, createBlog }) => {
       id: matchedBlog.id,
     })
   }
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value)
+  }
+
+  const addComment = (event) => {
+    event.preventDefault()
+
+    createComment({
+      comment: comment,
+      blog: matchedBlog.id,
+    })
+    setComment('')
+  }
+
   return (
     <>
       <h2>
@@ -40,23 +60,17 @@ const SpesificBlog = ({ matchedBlog, createBlog }) => {
       <br></br>
       added by {matchedBlog.user.name}
       <h3>comments</h3>
-      <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>{comment.comment}</li>
-        ))}
-      </ul>
+      <form onSubmit={addComment}>
+        <input
+          type="text"
+          value={comment}
+          onChange={handleCommentChange}
+        ></input>
+        <button type="submit">add comment</button>
+      </form>
+      <SpesificBlogComments comments={comments} />
     </>
   )
 }
 
 export default SpesificBlog
-
-/*
-  const getComment = async (id) => {
-    try {
-      dispatch(commentsForBlog(id))
-    } catch (exception) {
-      dispatch(setNotification(exception.response.data.error))
-    }
-  }
-*/

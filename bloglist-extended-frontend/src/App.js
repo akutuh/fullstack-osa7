@@ -19,6 +19,7 @@ import {
   removeBlog,
 } from './reducers/blogReducer'
 import { getUserFromJSON, newUser } from './reducers/userReducer'
+import { createComment } from './reducers/commentReducer'
 
 import { Routes, Route, Link, useMatch } from 'react-router-dom'
 
@@ -42,7 +43,7 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     dispatch(getUserFromJSON(loggedUserJSON))
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -87,6 +88,14 @@ const App = () => {
       dispatch(addLike(blogObject))
     } catch (exception) {
       dispatch(setNotification('creation failed (like)'))
+    }
+  }
+
+  const addComment = async (commentObject) => {
+    try {
+      dispatch(createComment(commentObject))
+    } catch (exception) {
+      dispatch(setNotification('creation failed (comment)'))
     }
   }
 
@@ -171,7 +180,11 @@ const App = () => {
             <Route
               path="/blogs/:id"
               element={
-                <SpesificBlog matchedBlog={matchedBlog} createBlog={likeBlog} />
+                <SpesificBlog
+                  matchedBlog={matchedBlog}
+                  createBlog={likeBlog}
+                  createComment={addComment}
+                />
               }
             />
             <Route

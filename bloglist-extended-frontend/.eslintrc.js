@@ -18,7 +18,7 @@ module.exports = {
       "sourceType": "module"
   },
   "plugins": [
-      "react", "jest", "cypress"
+      "react", "jest", "cypress", "react-hooks"
   ],
   "rules": {
       "indent": [
@@ -47,7 +47,9 @@ module.exports = {
       ],
       "no-console": 0,
       "react/prop-types": 0,
-      "react/react-in-jsx-scope": "off"
+      "react/react-in-jsx-scope": "off",
+      "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+      "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
   },
   "settings": {
     "react": {

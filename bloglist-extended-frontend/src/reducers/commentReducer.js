@@ -8,6 +8,9 @@ const commentSlice = createSlice({
     setComments(state, action) {
       return action.payload
     },
+    appendComment(state, action) {
+      state.push(action.payload)
+    },
   },
 })
 
@@ -18,5 +21,12 @@ export const commentsForBlog = (id) => {
   }
 }
 
-export const { setComments } = commentSlice.actions
+export const createComment = (content) => {
+  return async (dispatch) => {
+    const newComment = await blogService.createComm(content)
+    dispatch(appendComment(newComment))
+  }
+}
+
+export const { setComments, appendComment } = commentSlice.actions
 export default commentSlice.reducer
