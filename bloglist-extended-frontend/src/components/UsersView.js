@@ -2,7 +2,6 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 const UserView = ({ user, userCount }) => {
-  console.log(user)
   return (
     <tr>
       <td scope="row">
