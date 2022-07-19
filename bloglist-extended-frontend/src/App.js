@@ -114,6 +114,10 @@ const App = () => {
   const padding = {
     padding: 5,
   }
+  const bg = {
+    backgroundColor: 'lightgrey',
+    padding: 5,
+  }
 
   const match = useMatch('/users/:id')
   const blogsMadeBy = match
@@ -143,20 +147,21 @@ const App = () => {
         </div>
       ) : (
         <div>
-          <div>
+          <div style={bg}>
             <Link style={padding} to="/">
               blogs
             </Link>
             <Link style={padding} to="/users">
               users
             </Link>
+            <span style={padding}>
+              {user.name} logged in{' '}
+              <button onClick={handleLogout}> logout</button>
+            </span>
           </div>
           <h2>blogs</h2>
           <Notification />
-          <p>
-            {user.name} logged in{' '}
-            <button onClick={handleLogout}> logout</button>
-          </p>
+
           <Routes>
             <Route path="/users" element={<UsersView />} />
             <Route
