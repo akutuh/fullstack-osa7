@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-//import Blog from './components/Blog'
 import Notification from './components/Notification'
-//import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import UsersView from './components/UsersView'
 import BlogsShow from './components/Blogs'
+import SpesificBlog from './components/SpesificBlog'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -20,14 +19,15 @@ import {
 } from './reducers/blogReducer'
 import { getUserFromJSON, newUser } from './reducers/userReducer'
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useMatch } from 'react-router-dom'
 
 const App = () => {
-  //const [blogs, setBlogs] = useState([])
   const user = useSelector((state) => {
     return state.users
   })
-  //const [user, setUser] = useState(null)
+  const blogs = useSelector((state) => {
+    return state.blogs
+  })
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -41,11 +41,6 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     dispatch(getUserFromJSON(loggedUserJSON))
-    // if (loggedUserJSON) {
-    //   const user = JSON.parse(loggedUserJSON)
-    //   setUser(user)
-    //   blogService.setToken(user.token)
-    // }
   }, [])
 
   const handleLogin = async (event) => {
@@ -119,6 +114,11 @@ const App = () => {
     padding: 5,
   }
 
+  const match = useMatch('/users/:id')
+  const blogsMadeBy = match
+    ? blogs.filter((blog) => blog.user.id === match.params.id)
+    : null
+
   return (
     <div>
       {user === null ? (
@@ -137,36 +137,38 @@ const App = () => {
         </div>
       ) : (
         <div>
-          <Router>
-            <div>
-              <Link style={padding} to="/">
-                blogs
-              </Link>
-              <Link style={padding} to="/users">
-                users
-              </Link>
-            </div>
-            <h2>blogs</h2>
-            <Notification />
-            <p>
-              {user.name} logged in{' '}
-              <button onClick={handleLogout}> logout</button>
-            </p>
-            <Routes>
-              <Route path="/users" element={<UsersView />} />
-              <Route
-                path="/"
-                element={
-                  <BlogsShow
-                    addBlog={addBlog}
-                    deleteBlog={deleteBlog}
-                    likeBlog={likeBlog}
-                    blogFormRef={blogFormRef}
-                  />
-                }
-              />
-            </Routes>
-          </Router>
+          <div>
+            <Link style={padding} to="/">
+              blogs
+            </Link>
+            <Link style={padding} to="/users">
+              users
+            </Link>
+          </div>
+          <h2>blogs</h2>
+          <Notification />
+          <p>
+            {user.name} logged in{' '}
+            <button onClick={handleLogout}> logout</button>
+          </p>
+          <Routes>
+            <Route path="/users" element={<UsersView />} />
+            <Route
+              path="/users/:id"
+              element={<SpesificBlog blogsMadeBy={blogsMadeBy} />}
+            />
+            <Route
+              path="/"
+              element={
+                <BlogsShow
+                  addBlog={addBlog}
+                  deleteBlog={deleteBlog}
+                  likeBlog={likeBlog}
+                  blogFormRef={blogFormRef}
+                />
+              }
+            />
+          </Routes>
         </div>
       )}
     </div>

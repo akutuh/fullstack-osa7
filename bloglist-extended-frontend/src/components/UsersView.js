@@ -1,9 +1,13 @@
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const UserView = ({ user, userCount }) => {
+  console.log(user)
   return (
     <tr>
-      <td scope="row">{user.name}</td>
+      <td scope="row">
+        <Link to={`/users/${user.id}`}>{user.name}</Link>
+      </td>
       <td>{userCount}</td>
     </tr>
   )
