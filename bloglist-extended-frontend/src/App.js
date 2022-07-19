@@ -4,6 +4,7 @@ import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import UsersView from './components/UsersView'
 import BlogsShow from './components/Blogs'
+import SpesificUser from './components/SpesificUser'
 import SpesificBlog from './components/SpesificBlog'
 
 import blogService from './services/blogs'
@@ -119,6 +120,11 @@ const App = () => {
     ? blogs.filter((blog) => blog.user.id === match.params.id)
     : null
 
+  const matchBlog = useMatch('/blogs/:id')
+  const matchedBlog = matchBlog
+    ? blogs.find((blog) => blog.id === matchBlog.params.id)
+    : null
+
   return (
     <div>
       {user === null ? (
@@ -155,7 +161,13 @@ const App = () => {
             <Route path="/users" element={<UsersView />} />
             <Route
               path="/users/:id"
-              element={<SpesificBlog blogsMadeBy={blogsMadeBy} />}
+              element={<SpesificUser blogsMadeBy={blogsMadeBy} />}
+            />
+            <Route
+              path="/blogs/:id"
+              element={
+                <SpesificBlog matchedBlog={matchedBlog} createBlog={likeBlog} />
+              }
             />
             <Route
               path="/"
