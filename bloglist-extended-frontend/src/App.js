@@ -21,7 +21,10 @@ import {
 import { getUserFromJSON, newUser } from './reducers/userReducer'
 import { createComment } from './reducers/commentReducer'
 
-import { Routes, Route, Link, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
+
+import { Button, Navbar, Nav, Container } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 
 const App = () => {
   const user = useSelector((state) => {
@@ -57,6 +60,7 @@ const App = () => {
       dispatch(newUser(user))
       setUsername('')
       setPassword('')
+      dispatch(setNotification(`Welcome ${user.username}`))
     } catch (exception) {
       dispatch(setNotification('wrong credentials'))
     }
@@ -120,14 +124,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const padding = {
-    padding: 5,
-  }
-  const bg = {
-    backgroundColor: 'lightgrey',
-    padding: 5,
-  }
-
   const match = useMatch('/users/:id')
   const blogsMadeBy = match
     ? blogs.filter((blog) => blog.user.id === match.params.id)
@@ -139,10 +135,10 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <div className="container">
       {user === null ? (
         <div>
-          <h1>log in to application</h1>
+          <h1>Log in to application</h1>
           <Notification />
           <Togglable buttonLabel="login">
             <LoginForm
@@ -156,21 +152,27 @@ const App = () => {
         </div>
       ) : (
         <div>
-          <div style={bg}>
-            <Link style={padding} to="/">
-              blogs
-            </Link>
-            <Link style={padding} to="/users">
-              users
-            </Link>
-            <span style={padding}>
-              {user.name} logged in{' '}
-              <button onClick={handleLogout}> logout</button>
-            </span>
-          </div>
-          <h2>blog app</h2>
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Container>
+              <Navbar.Brand href="">Blog app</Navbar.Brand>
+              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+              <Navbar.Collapse id="responsive-navbar-nav">
+                <Nav className="me-auto">
+                  <LinkContainer to="/">
+                    <Nav.Link>blogs</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/users">
+                    <Nav.Link>users</Nav.Link>
+                  </LinkContainer>
+                  <Nav.Link>{user.name} logged in </Nav.Link>
+                  <Button variant="secondary" onClick={handleLogout}>
+                    logout
+                  </Button>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
           <Notification />
-
           <Routes>
             <Route path="/users" element={<UsersView />} />
             <Route

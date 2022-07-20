@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
   const notification = useSelector(({ notifications }) => {
@@ -16,36 +17,16 @@ const Notification = () => {
     notification.includes('creation failed') ||
     notification.includes('allowed')
   ) {
-    const errorStyle = {
-      color: 'red',
-      background: 'lightgrey',
-      fontSize: 20,
-      borderStyle: 'solid',
-      borderRadius: 5,
-      padding: 10,
-      marginBottom: 10,
-    }
-
     return (
-      <div className="error" style={errorStyle}>
+      <Alert variant="danger" className="error">
         {notification}
-      </div>
+      </Alert>
     )
   } else {
-    const errorStyle = {
-      color: 'green',
-      background: 'lightgrey',
-      fontSize: 20,
-      borderStyle: 'solid',
-      borderRadius: 5,
-      padding: 10,
-      marginBottom: 10,
-    }
-
     return (
-      <div className="error" style={errorStyle}>
+      <Alert variant="success" className="error">
         {notification}
-      </div>
+      </Alert>
     )
   }
 }

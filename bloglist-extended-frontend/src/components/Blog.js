@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Button, Card, Container, Row, Col } from 'react-bootstrap'
+
 const Blog = ({ blog, createBlog, removeBlog, user }) => {
   const [visible, setVisible] = useState(false)
   const [removeVisible, setRemoveVisible] = useState(false)
@@ -44,38 +46,55 @@ const Blog = ({ blog, createBlog, removeBlog, user }) => {
     })
   }
 
-  const blogStyle = {
-    paddingTop: 8,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 2,
-    marginBottom: 5,
-  }
   return (
     <div>
       <div style={hideWhenVisible}>
-        <div style={blogStyle} className="blog">
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} {blog.author}{' '}
-          </Link>
-          <button onClick={toggleVisibility}>view</button>
-        </div>
+        <Container>
+          <Row>
+            <Col>
+              <Card className="blog mt-1">
+                <Link to={`/blogs/${blog.id}`}>
+                  <Card.Body>
+                    {blog.title} {blog.author}{' '}
+                  </Card.Body>
+                </Link>
+                <Button variant="info" onClick={toggleVisibility}>
+                  view
+                </Button>
+              </Card>
+            </Col>
+            <Col></Col>
+          </Row>
+        </Container>
       </div>
-      <div style={showWhenVisible}>
-        <div style={blogStyle} className="blogAll">
-          {blog.title} {blog.author}{' '}
-          <button onClick={toggleVisibility}>hide</button>
-          <br></br>
-          {blog.url}
-          <br></br>
-          {blog.likes} <button onClick={likeBlog}>like</button>
-          <br></br>
-          {blog.user.username}
-          <div style={hideIfNotAddedByLoggedUser}>
-            <button onClick={deleteBlog}>remove</button>
-          </div>
-        </div>
-      </div>
+      <Container>
+        <Row>
+          <Col>
+            <Card style={showWhenVisible}>
+              <Card.Body className="blogAll">
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title} {blog.author}{' '}
+                </Link>
+                <br></br>
+                <a href={blog.url}>{blog.url}</a>
+                <br></br>
+                {blog.likes} <Button onClick={likeBlog}>like</Button>
+                <br></br>
+                {blog.user.username}
+                <div style={hideIfNotAddedByLoggedUser}>
+                  <Button variant="danger" onClick={deleteBlog}>
+                    remove
+                  </Button>
+                </div>
+              </Card.Body>
+              <Button variant="info" onClick={toggleVisibility}>
+                hide
+              </Button>
+            </Card>
+          </Col>
+          <Col></Col>
+        </Row>
+      </Container>
     </div>
   )
 }

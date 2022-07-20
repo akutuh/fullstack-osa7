@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
 const UserView = ({ user, userCount }) => {
   return (
@@ -42,10 +43,10 @@ const UsersView = () => {
   return (
     <>
       <h2>Users</h2>
-      <table>
+      <Table striped>
         <thead>
           <tr>
-            <th scope="col"></th>
+            <th scope="col">users</th>
             <th scope="col">blogs created</th>
           </tr>
         </thead>
@@ -58,7 +59,7 @@ const UsersView = () => {
             />
           ))}
         </tbody>
-      </table>
+      </Table>
     </>
   )
 }

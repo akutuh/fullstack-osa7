@@ -2,6 +2,7 @@ import { commentsForBlog } from '../reducers/commentReducer'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import SpesificBlogComments from './SpesificBlogComments'
+import { Button } from 'react-bootstrap'
 
 const SpesificBlog = ({ matchedBlog, createBlog, createComment }) => {
   const [comment, setComment] = useState('')
@@ -52,11 +53,14 @@ const SpesificBlog = ({ matchedBlog, createBlog, createComment }) => {
   return (
     <>
       <h2>
-        {matchedBlog.title} {matchedBlog.author}
+        {matchedBlog.title} by {matchedBlog.author}
       </h2>
       <a href={matchedBlog.url}>{matchedBlog.url}</a>
       <br></br>
-      {matchedBlog.likes} likes <button onClick={likeBlog}>like</button>
+      {matchedBlog.likes} likes{' '}
+      <Button variant="primary" onClick={likeBlog}>
+        like
+      </Button>
       <br></br>
       added by {matchedBlog.user.name}
       <h3>comments</h3>
@@ -65,8 +69,10 @@ const SpesificBlog = ({ matchedBlog, createBlog, createComment }) => {
           type="text"
           value={comment}
           onChange={handleCommentChange}
-        ></input>
-        <button type="submit">add comment</button>
+        ></input>{' '}
+        <Button variant="primary" type="submit">
+          add comment
+        </Button>
       </form>
       <SpesificBlogComments comments={comments} />
     </>
